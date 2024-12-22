@@ -4,6 +4,7 @@ import com.example.pruebaBackend.dto.*;
 import com.example.pruebaBackend.mapper.FranquiciaMapper;
 import com.example.pruebaBackend.mapper.ProductoMapper;
 import com.example.pruebaBackend.mapper.SucursalMapper;
+import com.example.pruebaBackend.model.Producto;
 import com.example.pruebaBackend.model.Sucursal;
 import com.example.pruebaBackend.services.SucursalService;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ public class SucursalController {
         this.sucursalService = sucursalService;
     }
 
-    @PutMapping("actualizar-nombre/{id}")
+    @PutMapping("/actualizar-nombre/{id}")
     public ResponseEntity<SucursalDto> actualizarNombreSucursal(@PathVariable Long id , @RequestBody CrearSucursalDto nuevoNombre) {
         SucursalDto sucursalDto = new SucursalDto();
         sucursalDto.setId(id);
@@ -28,11 +29,11 @@ public class SucursalController {
         return ResponseEntity.ok(SucursalMapper.toDto(sucursalService.agregarSucursal(SucursalMapper.toModel(sucursalDto))));
     }
 
-    @PostMapping("/{franquiciaId}/asignar-sucursal")
-    public ResponseEntity<Sucursal> agregarSucursal(
+    @PostMapping("/asignar-sucursal/{franquiciaId}")
+    public ResponseEntity<SucursalDto> agregarSucursal(
             @PathVariable Long franquiciaId,
             @RequestBody SucursalDto sucursalDto) {
-        Sucursal nuevaSucursal = sucursalService.asignarSucursal(franquiciaId, sucursalDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevaSucursal);
+        Sucursal nuevaSucursal = sucursalService.asignarSucursal(franquiciaId, SucursalMapper.toModel(sucursalDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(SucursalMapper.toDto(nuevaSucursal));
     }
 }

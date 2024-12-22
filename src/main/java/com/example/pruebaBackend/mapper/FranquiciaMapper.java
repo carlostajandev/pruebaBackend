@@ -13,6 +13,9 @@ public final class FranquiciaMapper {
         FranquiciaDto dto = new FranquiciaDto();
         dto.setId(model.getId());
         dto.setNombre(model.getNombre());
+        if (model.getSucursales() == null) {
+            return dto;
+        }
         dto.setSucursales(model.getSucursales().stream().map(SucursalMapper::toDto).toList());
         return dto;
     }
@@ -24,6 +27,9 @@ public final class FranquiciaMapper {
         Franquicia model = new Franquicia();
         model.setId(dto.getId());
         model.setNombre(dto.getNombre());
+        if (dto.getSucursales() == null) {
+            return model;
+        }
         model.setSucursales(dto.getSucursales().stream().map(SucursalMapper::toModel).toList());
         return model;
     }

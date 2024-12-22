@@ -20,12 +20,12 @@ public class ProductoController {
         this.productoService = productoService;
     }
 
-    @PatchMapping("actualizar-stock/{id}")
-    public ResponseEntity<Producto> actualizarStock(@PathVariable Long id, @RequestBody Long nuevoStock) {
-        return ResponseEntity.ok(productoService.actualizarStock(id, nuevoStock));
+    @PatchMapping("/actualizar-stock/{id}")
+    public ResponseEntity<ProductoDto> actualizarStock(@PathVariable Long id, @RequestBody ProductoDto nuevoStock) {
+        return ResponseEntity.ok(ProductoMapper.toDto(productoService.actualizarStock(id, nuevoStock.getStock())));
     }
 
-    @PutMapping("actualizar-nombre/{id}")
+    @PutMapping("/actualizar-nombre/{id}")
     public ResponseEntity<ProductoDto> actualizarNombreProducto(@PathVariable Long id , @RequestBody CrearProductoDto nuevoNombre) {
         ProductoDto productoDto = new ProductoDto();
         productoDto.setId(id);
@@ -33,22 +33,15 @@ public class ProductoController {
         return ResponseEntity.ok(ProductoMapper.toDto(productoService.agregarProducto(ProductoMapper.toModel(productoDto))));
     }
 
-    @GetMapping("mayor-stock")
-    public ResponseEntity<Producto> obtenerProductoConMayorStock(@PathVariable Long sucursalId) {
-        return productoService.obtenerProductoConMayorStock(sucursalId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.noContent().build());
-    }
-
-    @PostMapping("/{sucursalId}/asignar-producto")
-    public ResponseEntity<Producto> agregarProducto(
+    @PostMapping("/asignar-producto/{sucursalId}")
+    public ResponseEntity<ProductoDto> agregarProducto(
             @PathVariable Long sucursalId,
             @RequestBody ProductoDto productoDto) {
-        Producto nuevoProducto = productoService.asignarProducto(sucursalId, productoDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(nuevoProducto);
+        Producto nuevoProducto = productoService.asignarProducto(sucursalId, ProductoMapper.toModel(productoDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ProductoMapper.toDto(nuevoProducto));
     }
 
-    @DeleteMapping("/{sucursalId}/eliminar-producto")
+    @DeleteMapping("/eliminar-producto/{sucursalId}")
     public ResponseEntity<Void> eliminarProducto(
             @PathVariable Long sucursalId,
             @RequestBody ProductoDto productoDto) {

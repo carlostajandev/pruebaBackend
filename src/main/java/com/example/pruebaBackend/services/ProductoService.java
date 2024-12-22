@@ -16,10 +16,11 @@ import java.util.Optional;
 @Service
 public class ProductoService {
 
-    private SucursalRepository sucursalRepository;
+    private final SucursalRepository sucursalRepository;
     private final ProductoRepository productoRepository;
 
-    public ProductoService(ProductoRepository productoRepository) {
+    public ProductoService(SucursalRepository sucursalRepository, ProductoRepository productoRepository) {
+        this.sucursalRepository = sucursalRepository;
         this.productoRepository = productoRepository;
     }
 
@@ -37,29 +38,25 @@ public class ProductoService {
         return productoRepository.save(producto);
     }
 
-    public Optional<Producto> obtenerProductoConMayorStock(Long sucursalId) {
-        return productoRepository.findAll().stream()
-                .filter(producto -> producto.getId().equals(sucursalId))
-                .max(Comparator.comparingLong(Producto::getStock));
-    }
-
-    public Producto  asignarProducto(Long sucursalId, ProductoDto productoDto) {
+    public Producto  asignarProducto(Long sucursalId, Producto producto1) {
         Sucursal sucursal = sucursalRepository.findById(sucursalId)
                 .orElseThrow(() -> new RuntimeException("Sucursal no encontrada"));
-
-        Producto producto = new Producto();
-        producto.setNombre(productoDto.getNombre());
-        sucursal.getProductos().add(producto);
-        return productoRepository.save(producto);
+        producto1.setSucursalId(sucursal);
+        if (producto1.getId() != null) {
+            productoRepository.findById(producto1.getId())
+                    .orElseThrow(() -> new ResourceNotFoundException("Producto con ID " + producto1.getId() + " no encontrado"));
+        }
+        return productoRepository.save(producto1);
     }
 
     public void eliminarProducto(Long sucursalId, ProductoDto productoDto) {
         Sucursal sucursal = sucursalRepository.findById(sucursalId)
                 .orElseThrow(() -> new RuntimeException("Sucursal no encontrada"));
-
-        Producto producto = new Producto();
-        producto.setNombre(productoDto.getNombre());
-        sucursal.getProductos().remove(producto);
+        if (productoDto.getId() == null) {
+            throw new ResourceNotFoundException("Producto con ID " + productoDto.getId() + " no encontrado");
+        }
+        Producto producto = productoRepository.findById(productoDto.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Producto con ID " + productoDto.getId() + " no encontrado"));
         productoRepository.deleteById(productoDto.getId());
     }
 }

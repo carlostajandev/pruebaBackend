@@ -13,6 +13,9 @@ public final class SucursalMapper {
         Sucursal model = new Sucursal();
         model.setId(dto.getId());
         model.setNombre(dto.getNombre());
+        if (dto.getProductos() == null) {
+            return model;
+        }
         model.setProductos(dto.getProductos().stream().map(ProductoMapper::toModel).toList());
 
         return model;
@@ -25,6 +28,9 @@ public final class SucursalMapper {
         SucursalDto dto = new SucursalDto();
         dto.setId(model.getId());
         dto.setNombre(model.getNombre());
+        if (model.getProductos() == null) {
+            return dto;
+        }
         dto.setProductos(model.getProductos().stream().map(ProductoMapper::toDto).toList());
         return dto;
     }

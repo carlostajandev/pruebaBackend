@@ -21,7 +21,10 @@ public class Sucursal {
 
     private String nombre;
 
-    @OneToMany(cascade = CascadeType.PERSIST, orphanRemoval = true)
+    @ManyToOne
+    private Franquicia franquiciaId;
+
+    @OneToMany(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "sucursal_id")
     private List<Producto> productos;
 
