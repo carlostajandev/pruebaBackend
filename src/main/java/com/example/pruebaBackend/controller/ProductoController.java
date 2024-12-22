@@ -20,11 +20,6 @@ public class ProductoController {
         this.productoService = productoService;
     }
 
-    @PostMapping
-    public ResponseEntity<ProductoDto> agregarProducto(@RequestBody ProductoDto producto) {
-        return ResponseEntity.ok(ProductoMapper.toDto(productoService.agregarProducto(ProductoMapper.toModel(producto))));
-    }
-
     @PatchMapping("actualizar-stock/{id}")
     public ResponseEntity<Producto> actualizarStock(@PathVariable Long id, @RequestBody Long nuevoStock) {
         return ResponseEntity.ok(productoService.actualizarStock(id, nuevoStock));
@@ -38,7 +33,7 @@ public class ProductoController {
         return ResponseEntity.ok(ProductoMapper.toDto(productoService.agregarProducto(ProductoMapper.toModel(productoDto))));
     }
 
-    @GetMapping("/mayor-stock/{sucursalId}")
+    @GetMapping("mayor-stock")
     public ResponseEntity<Producto> obtenerProductoConMayorStock(@PathVariable Long sucursalId) {
         return productoService.obtenerProductoConMayorStock(sucursalId)
                 .map(ResponseEntity::ok)
