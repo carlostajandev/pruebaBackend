@@ -16,12 +16,11 @@ Este proyecto es una implementación técnica basada en Spring Boot para una tie
 
 2. **Configuración de MySQL:**
 
-    - Crea una base de datos en MySQL:
-      ```sql
-      CREATE DATABASE prueba_tecnica;
-      ```
-    - me Actualiza el archivo `application.properties` con las credenciales de tu base de datos:
-      ```properties
+    -  Inicializa la base de datos en MySQL:
+
+    -  Actualiza el archivo `application.properties` con las credenciales de tu base de datos:
+      
+   ```properties
       spring.datasource.url=jdbc:mysql://localhost:3306/prueba_tecnica
       spring.datasource.username=tu_usuario
       spring.datasource.password=tu_contraseña
@@ -35,7 +34,7 @@ Este proyecto es una implementación técnica basada en Spring Boot para una tie
 
 ### **1. Configuración Inicial del Proyecto**
 
-1. Crea un proyecto Spring Boot usando [Spring Initializr](https://start.spring.io/):
+1. Abre el proyecto Spring Boot usando cualquier IDE de desarrollador soportado por java:
 
     - Dependencias necesarias:
         - Spring Web
